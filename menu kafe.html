@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pemesanan Menu Cafe Kalpa 1.0</title>
+    <style>
+        body {
+            background-color: #e1eced;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Pemesanan Menu Cafe Kalpa 1.0</h1>
+    <table id="tableAdd" border="0" width="100%">
+        <tr>
+            <th>Tambah Menu</th>
+        </tr>
+        <tr>
+            <td>Nama Menu</td>
+            <td><input type="text" id="nama_menu" name="nama_menu" /></td>
+        </tr>
+        <tr>
+            <td>Harga Menu</td>
+            <td><input type="text" id="harga_menu" name="harga_menu" /></td>
+        </tr>
+        <tr>
+            <td>Kategori</td>
+            <td>
+                <select id="kategori_menu">
+                    <option>Minuman</option>
+                    <option>Makanan</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan='2'><button type="button" onclick="tambahMenu()">Tambah</button></td>
+        </tr>
+    </table><br />
+    <table id="tableItem" border="0" width="60%"></table><br />
+    <table border="0" width="40%">
+        <tr>
+            <th>Sistem Pembayaran</th>
+        </tr>
+        <tr>
+            <td>Total Menu</td>
+            <td>
+                <input type="text" id="total-produk" placeholder="Total" disabled />
+            </td>
+        </tr>
+        <tr>
+            <td>Total Harga</td>
+            <td><input type="text" id="total-harga" placeholder="Total Harga" disabled /></td>
+        </tr>
+        <tr>
+            <td>Diskon</td>
+            <td><input type="text" id="diskon-harga" placeholder="Diskon Harga" disabled /></td>
+        </tr>
+        <tr>
+            <td>Jumlah Uang</td>
+            <td><input type="text" id="jumlah-uang" placeholder="Masukan Jumlah Uang" /></td>
+        </tr>
+        <tr>
+            <td>Kembalian</td>
+            <td><input type="text" id="uang-kembalian" placeholder="Kembalian" disabled /></td>
+        </tr>
+        <tr>
+            <td>
+                <button onclick="prosesPembayaran()">Bayar</button>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        var listItem = [
+            "Coffee",
+            "Latte",
+            "Thai Tea",
+            "Cappuccino",
+            "Green Thai Tea",
+            "Teh Manis",
+            "Leci Tea",
+            "Lemon Tea",
+            "Air Mineral",
+            "Soda Dingin",
+            "Kentang Goreng",
+            "Nasi Kuning",
+            "Ayam Geprek",
+            "Bakso",
+            "Mie Ayam",
+            "Batagor",
+            "Mie Goreng",
+            "Nasi Goreng",
+            "Stik Ubi",
+            "Wings Spicy"
+        ];
+
+        var priceItem = [
+            25000,
+            20000,
+            15000,
+            20000,
+            10000,
+            10000,
+            10000,
+            10000,
+            5000,
+            25000,
+            30000,
+            15000,
+            20000,
+            20000,
+            15000,
+            15000,
+            10000,
+            20000,
+            15000,
+            30000
+        ];
+
+        var categoryItem = [
+            "Minuman",
+            "Minuman",
+            "Minuman",
+            "Minuman",
+            "Minuman",
+            "Minuman",
+            "Minuman",
+            "Minuman",
+            "Minuman",
+            "Minuman",
+            "Makanan",
+            "Makanan",
+            "Makanan",
+            "Makanan",
+            "Makanan",
+            "Makanan",
+            "Makanan",
+            "Makanan",
+            "Makanan",
+            "Makanan"
+        ];
+
+        function tampilkanList() {
+            var tableList = document.getElementById("tableItem");
+            tableList.innerHTML = "<tr><th>Menu</th><th>Harga</th><th>Jumlah</th></tr>";
+            for (let i = 0; i < listItem.length; i++) {
+                var jumlahOrder = `<input type='text' id='item${i}'/>`;
+                tableList.innerHTML += "<tr><td>" + categoryItem[i] + " - " + listItem[i] + "</td><td>" + priceItem[i] + "</td><td>" + jumlahOrder + "</td></tr>";
+            }
+        }
+
+        tampilkanList();
+
+        function tambahMenu() {
+            var inputNamaMenu = document.getElementById("nama_menu").value;
+            var inputHargaMenu = document.getElementById("harga_menu").value;
+            var inputKategoriMenu = document.getElementById("kategori_menu").value;
+
+            if (inputNamaMenu == "" || inputHargaMenu == "") {
+                alert("Maaf, Mohon melengkapi form menu");
+            } else {
+                listItem.push(inputNamaMenu);
+                priceItem.push(inputHargaMenu);
+                categoryItem.push(inputKategoriMenu);
+                tampilkanList();
+                document.getElementById("nama_menu").value = '';
+                document.getElementById("harga_menu").value = '';
+            }
+        }
+
+        function totalHarga() {
+            let hargaTemp;
+            let jumlahTemp;
+            let totalHarga = 0;
+            for (let i = 0; i < listItem.length; i++) {
+                hargaTemp = Number(priceItem[i]);
+                jumlahTemp = Number(document.getElementById(`item${i}`).value);
+                totalHarga += hargaTemp * jumlahTemp;
+            }
+
+            return totalHarga;
+        }
+
+        function totalProduk() {
+            let jumlah = 0;
+            let jumlahProduk;
+            for (let i = 0; i < listItem.length; i++) {
+                jumlahProduk = Number(document.getElementById(`item${i}`).value);
+                jumlah += jumlahProduk;
+            }
+            return jumlah;
+        }
+
+        function uangKembalian(jumlahUang, hargaTotal) {
+            return jumlahUang - hargaTotal;
+        }
+
+        function hargaDiskon(hargaTotal, diskonPersen) {
+            return hargaTotal * (diskonPersen / 100);
+        }
+
+        function hargaTotalDiskon(hargaTotal, totalDiskon) {
+            return hargaTotal - totalDiskon;
+        }
+
+        function prosesPembayaran() {
+            const hargaTotal = totalHarga();
+            const jumlahProduk = totalProduk();
+            const diskonPersen = 15;
+            const totalDiskon = hargaDiskon(hargaTotal, diskonPersen);
+            const hargaSetelahDiskon = hargaTotalDiskon(hargaTotal, totalDiskon);
+
+            var jumlahUang = document.getElementById("jumlah-uang").value;
+
+            const kembalian = uangKembalian(jumlahUang, hargaSetelahDiskon);
+            document.getElementById("total-produk").value = `${jumlahProduk}`;
+            document.getElementById("total-harga").value = `${hargaTotal} / ${diskonPersen}%`;
+            document.getElementById("diskon-harga").value = `${hargaSetelahDiskon}`;
+            document.getElementById("uang-kembalian").value = `${kembalian}`;
+        }
+    </script>
+</body>
+</html>
